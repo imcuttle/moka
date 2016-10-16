@@ -12336,17 +12336,17 @@
 		},
 		u = {},
 		c = {
-			DB: (0, i["default"])(s.DB).then(function(t) {
+			DB: (0, i["default"])(s.DB+"?_="+Date.now()).then(function(t) {
 				return t.json()
 			}).then(function(t) {
 				return u.DB = t, t
 			}),
-			mokaConfig: (0, i["default"])(s.mokaConfig).then(function(t) {
+			mokaConfig: (0, i["default"])(s.mokaConfig+"?_="+Date.now()).then(function(t) {
 				return t.json()
 			}).then(function(t) {
 				return u.mokaConfig = t, t
 			}),
-			themeConfig: (0, i["default"])(s.themeConfig).then(function(t) {
+			themeConfig: (0, i["default"])(s.themeConfig+"?_="+Date.now()).then(function(t) {
 				return t.json()
 			}).then(function(t) {
 				return u.themeConfig = t, t
