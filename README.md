@@ -22,6 +22,7 @@
     $ moka i  # 开启自己的spa Blog
     $ moka g  # generate static pages
     $ moka s  # 开启本地服务
+    $ moka n abc # 新建一个article
     
     $ moka d  # 根据 moka.config.json deploy 发布 
     ``` 
