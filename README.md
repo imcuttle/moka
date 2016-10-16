@@ -29,9 +29,12 @@
 3. 线上效果
     [moyuyc.github.io](https://moyuyc.github.io/)
     
-## Document
 
-`Moka`, 认为前端UI与数据应该完全分离开来, 而不是像`hexo`那样传统的blog。
-这样做的好处不言而喻, 网站速度更加优化了,
+## More
+
+主题开发者请看 [Document](DOCUMENT.md)
+
+使用默认主题者请看或看配置说明
+
  
 
