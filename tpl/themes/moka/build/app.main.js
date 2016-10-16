@@ -11460,9 +11460,11 @@
 						e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.context,
 						n = t.notexist,
 						r = t.remote.themeConfig,
+						x = t.remote.DB,
+						y = x && x.main && x.main[e.params.hrefTitle],
 						o = e.location.pathname,
 						i = e.params.hrefTitle;
-					return n ? void(document.title = "Not Found-" + r.title) : void("/" === o ? document.title = r.title : o.startsWith("/posts") ? this.isPostsPath(o) ? document.title = "Posts - " + r.title : document.title = this.context.params.postTitle + " - " + r.title : o.startsWith("/article/") ? document.title = i + " - " + r.title : o.startsWith("/tags") ? document.title = "Tags - " + r.title : o.startsWith("/search") ? document.title = "Search - " + r.title : o.startsWith("/project") && (document.title = "Projects - " + r.title))
+					return n ? void(document.title = "Not Found-" + r.title) : void("/" === o ? document.title = r.title : o.startsWith("/posts") ? this.isPostsPath(o) ? document.title = "Posts - " + r.title : document.title = this.context.params.postTitle + " - " + r.title : o.startsWith("/article/") ? document.title = (y && y.head.title) + " - " + r.title : o.startsWith("/tags") ? document.title = "Tags - " + r.title : o.startsWith("/search") ? document.title = "Search - " + r.title : o.startsWith("/project") && (document.title = "Projects - " + r.title))
 				}
 			}, {
 				key: "isPostsPath",
