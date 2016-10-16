@@ -11,7 +11,6 @@
   "pageSize": 6,
   "summaryNum": 50,
 
-  "postTarget": "_blank",
   "iconTarget": "_blank",
   "projectTarget": "_blank",
 
@@ -21,35 +20,41 @@
   },
   "projects": [
     {
-      "title": "Moyu Theme",
-      "state": "Doing",
-      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+      "title": "Moka & Theme",
+      "image": "https://segmentfault.com/img/bVEjtX",
+      "link": "https://github.com/moyuyc/moka"
     },
     {
-      "title": "Moyu Theme",
-      "state": "Doing",
-      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+      "title": "Music Robot",
+      "image": "/upload/1471705339720.png",
+      "link": "https://github.com/moyuyc/request-song-robot"
     },
     {
-      "title": "Moyu Theme",
-      "state": "Doing",
-      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+      "title": "Markdown Editor",
+      "image": "/upload/1471093544488.png",
+      "link": "https://github.com/moyuyc/markdown-editor"
     },
     {
-      "title": "Moyu Theme",
-      "state": "Doing",
-      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+      "title": "Node Explorer",
+      "image": "/images/md.png",
+      "link": "http://file.moyuyc.xyz/"
     },
     {
-      "title": "Moyu Theme",
-      "state": "Doing",
-      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+      "title": "Node BookShop",
+      "image": "/images/p7.png",
+      "link": "https://github.com/moyuyc/book-shopping"
     }
   ],
 
   "icon": [
     {
-  	  "github": "https://github.com/moyuyc"
+      "weibo": "http://weibo.com/2848472365"
+    },
+    {
+      "github": "https://github.com/moyuyc"
+    },
+    {
+      "envelop-o": "mailto:492899414@qq.com"
     }
   ],
 

@@ -17,7 +17,6 @@
   "pageSize": 6, // 每页文章数目, <=0 一页展示所有
   "summaryNum": 50, // 摘要的文字截断字数
 
-  "postTarget": "_blank", // 文章中link的跳转方式
   "iconTarget": "_blank", // 左侧icon的link的跳转方式
   "projectTarget": "_blank", // project中link的跳转方式
 
