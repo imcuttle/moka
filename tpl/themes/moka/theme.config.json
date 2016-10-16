@@ -1,0 +1,71 @@
+{
+  "avatar": "/head.jpg",
+  "title": " Moyu Dev Blog ",
+  "description": " Web, Node C/C++ Dev ",
+
+  "mainInfoColor": "",
+  "canvasColor": "",
+
+  "leftPercentage": 50,
+
+  "pageSize": 6,
+  "summaryNum": 50,
+
+  "postTarget": "_blank",
+  "iconTarget": "_blank",
+  "projectTarget": "_blank",
+
+  "home": {
+    "title": "About Me",
+    "contentHtml": "<p>I’m a Javascript enthusiast. I organise Baidu BEFE Meetup and try my best to help out with the team. I’m also a member of the core dev team.</p><p><img class='emoji' src='http://emojipedia-us.s3.amazonaws.com/cache/08/84/088419f4d97c19762c29008c4a89bbf4.png'/></p>"
+  },
+  "projects": [
+    {
+      "title": "Moyu Theme",
+      "state": "Doing",
+      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+    },
+    {
+      "title": "Moyu Theme",
+      "state": "Doing",
+      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+    },
+    {
+      "title": "Moyu Theme",
+      "state": "Doing",
+      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+    },
+    {
+      "title": "Moyu Theme",
+      "state": "Doing",
+      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+    },
+    {
+      "title": "Moyu Theme",
+      "state": "Doing",
+      "image": "https://raw.githubusercontent.com/TaylanTatli/Ramme/master/assets/img/screenshot-post.png"
+    }
+  ],
+
+  "icon": [
+    {
+  	  "github": "https://github.com/moyuyc"
+    }
+  ],
+
+  "coverImage": {
+    "images": {
+      "tags": "http://taylantatli.me/Halve/images/unsplash-gallery-image-3.jpg",
+      "home": "http://taylantatli.me/Halve/images/unsplash-image-10.jpg",
+      "article": "http://taylantatli.me/Halve/images/unsplash-gallery-image-3.jpg",
+      "serach": "http://taylantatli.me/Halve/images/unsplash-image-10.jpg",
+      "notExist": "http://taylantatli.me/Halve/images/unsplash-gallery-image-3.jpg",
+      "posts": [
+        "http://taylantatli.me/Halve/images/unsplash-image-10.jpg",
+        "http://taylantatli.me/Halve/images/home.png",
+        "http://taylantatli.me/Halve/images/unsplash-gallery-image-3.jpg"
+      ]
+    },
+    "articleCover": true
+  }
+}

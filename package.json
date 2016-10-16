@@ -1,6 +1,6 @@
 {
-  "name": "moka",
-  "version": "0.0.1",
+  "name": "moka-cli",
+  "version": "1.0.0",
   "dependencies": {
     "cheerio": "^0.22.0",
     "colors": "^1.1.2",
@@ -25,5 +25,13 @@
     "moka": "bin/index.js"
   },
   "author": "moyu",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moyuyc/moka.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moyuyc/moka/issues"
+  },
+  "homepage": "https://github.com/moyuyc/moka#readme"
 }

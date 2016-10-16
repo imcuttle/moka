@@ -3,7 +3,8 @@
 
 blog/
 
-tpl/themes/moka/
+npm-debug.log
+tpl/themes/moka/src
 tpl/themes/moka/index.js
 tpl/themes/moka/webpack.config.js
 tpl/themes/moka/package.json
