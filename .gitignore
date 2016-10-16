@@ -1,0 +1,12 @@
+.idea/
+**/node_modules/
+
+blog/
+
+tpl/themes/moka/
+tpl/themes/moka/index.js
+tpl/themes/moka/webpack.config.js
+tpl/themes/moka/package.json
+!tpl/themes/moka/build/
+!tpl/themes/moka/theme.config.json
+!tpl/themes/moka/theme.config.js

@@ -1,0 +1,113 @@
+HTMLCanvasElement.prototype.utils = function(){
+	function randomInt(bound){
+		return Math.floor(Math.random()*bound);
+	}
+	function randomRgba(){
+		return rgba(randomInt(256),randomInt(256),randomInt(256),Math.random());
+	}
+	function rgba(r, g, b, a) {
+		return "rgba(" + r + "," + g + "," + b + "," + a + ")";
+	}
+	return {
+		randomInt:randomInt,
+		randomRgba:randomRgba,
+		rgba:rgba,
+		P2L:function P2L(r, angle){
+			var ret = {x:0, y:0};
+			ret.x = Math.cos(angle*Math.PI/180)*r;
+			ret.y = Math.sin(angle*Math.PI/180)*r;
+			return (ret);
+		},//polar to linear coordinate transform
+	}
+}();
+HTMLCanvasElement.prototype.drawFlower = function(op){
+	function Flower(c,petals,size,x,y,rotate){
+		this.c = c || [255,255,255];
+		this.petals = petals || 4;
+		this.size = size || 5;
+		this.x = x || 0;
+		this.y = y || 0;
+		this.rotate = rotate || 0;
+	}
+	Flower.prototype.draw = function(){
+		var _rad = this.size,_num_pts=this.petals,_x=this.x,_y=this.y,c=this.c;
+		ctx.save();
+		ctx.shadowBlur = 30;
+		ctx.lineWidth = 1;
+		ctx.shadowColor = utils.rgba(c[0],c[1],c[2],1);
+		ctx.fillStyle = utils.rgba(c[0],c[1],c[2],.6);
+		c2 = [Math.floor(c[0]/1.6),Math.floor(c[1]/1.6),Math.floor(c[2]/1.6)];				
+		ctx.strokeStyle = utils.rgba(c2[0],c2[1],c2[2],1);					
+		var pts = [];
+		var _a = flower.rotate+(tick*1);
+		for (var i = 0 ; i <= _num_pts ; i++){//改增量法
+			pts.push({x:utils.P2L(_rad, _a).x,y:utils.P2L(_rad, _a).y});  
+			_a += (360/_num_pts);
+		}
+		for (var i = 1 ; i<= _num_pts; i+=2){
+			idx= i%_num_pts;
+			ctx.beginPath();
+			ctx.moveTo(_x,_y);
+			ctx.bezierCurveTo(_x+pts[i-1].x,_y+pts[i-1].y,_x+pts[idx+1].x,_y+pts[idx+1].y,_x,_y);
+			ctx.stroke();
+			ctx.fill();
+		}
+		ctx.restore();
+	}
+	var canvas = this;
+	var utils = this.utils;
+	var ctx = this.getContext('2d');
+	op = Object.extend({
+		animate:false,
+		rotate:90,
+		randomSize:true,
+		randomColor:true,
+		randomPetals: true,
+		pos:{
+			x:this.width/2,
+			y:this.height/2
+		}
+	},op);
+	//construct flower instance
+	var c = op.randomColor?[utils.randomInt(256),utils.randomInt(256),utils.randomInt(256)]:op.color;
+	if(op.randomSize){
+		var scale = Math.min(this.width,this.height)/1.5;
+		var size = (scale>>3)+utils.randomInt(scale);
+	}else var size = op.size;
+	var petals = op.randomPetals?(4+utils.randomInt(5))*2:op.petals*2;
+	var flower = new Flower(c,petals,size,op.pos.x,op.pos.y,op.rotate);
+	this.flowers = this.flowers || [];
+	this.flowers.push(flower);
+	var tick = 0;
+	var run = function(){
+		this.magicBg();
+		this.flowers.forEach(function(f){f.draw();});
+		if(op.animate){
+			requestAnimationFrame(run);
+			tick+=.5;
+		}
+	}.bind(this);
+	run();
+}
+Object.extend = function(){
+	if(!arguments || !arguments.length) return {};
+	var rlt = arguments[0];
+	for(var i=1;i<arguments.length;i++){
+		var argu = arguments[i];
+		for(var k in argu)
+			rlt[k] = argu[k];
+	}
+	return rlt;
+}
+HTMLCanvasElement.prototype.magicBg = function(){
+	var ctx = this.getContext('2d');
+	if(!this.grd){
+		this.grd=ctx.createRadialGradient(this.width/2,this.height/2,0,this.width/2,this.height/2,Math.min(this.width,this.height)/1.2);
+		this.grd.addColorStop(0,"rgba(255,255,255,.25)");
+		this.grd.addColorStop(1,this.utils.rgba(200+this.utils.randomInt(56),200+this.utils.randomInt(56),200+this.utils.randomInt(56),.25));
+	}
+	ctx.save();
+	ctx.clearRect(0,0,this.width,this.height);
+	ctx.fillStyle = this.grd;
+	ctx.fillRect(0,0,this.width,this.height);
+}

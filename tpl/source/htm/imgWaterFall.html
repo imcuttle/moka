@@ -1,0 +1,91 @@
+---
+layout: false
+---
+<style>
+	body{background-color:#E9E9E9;}
+	.img-wf{
+		width:75%;
+		padding:0;
+		margin: auto;
+
+		list-style:none;
+	}
+	.img-wf li{
+		position:relative;
+		padding: 3px 1% 3px;
+		float:left;
+		width: 23%;
+	}
+	.img-wf li img{
+		width:100%;
+	}
+	.img-wf .img-item{
+		background-color:white;
+		padding: 4px;
+		margin-bottom: 15px;
+	}
+	.img-wf .img-item:hover{
+		transition: 0.4s;
+		transform:scale(1.05,1.05);
+		box-shadow: 6px 6px 3px gray;
+	}
+
+	@keyframes fadeIn {
+		0% {opacity: 0; /*初始状态 透明度为0*/}
+		100% {opacity: 1; /*结尾状态 透明度为1*/}
+	}
+	.animate{
+		animation:fadeIn 1.5s;
+	}
+</style>
+
+<ul class='img-wf'>
+<li><div class='img-item'><img src='images/pic-1.jpg' /></div></li>
+<li><div><div class='img-item'><img src='images/pic-2.jpg' /></div></li>
+<li><div class='img-item'><img src='images/pic-3.jpg' /></div></li>
+<li><div class='img-item'><img src='images/pic-4.jpg' /></div></li>
+</ul>
+
+<script>
+	var imgwf = document.querySelector('.img-wf');
+	HTMLElement.prototype.waterfall = function(srcs){
+		var lis = this.children;		
+		function getRandomImg(onload){
+			function createImg(src){
+				var div = document.createElement('div');
+				div.className = 'img-item';
+				var img = document.createElement('img');
+				img.src = src;
+				img.style.display='none';
+				img.onload = onload;
+				div.appendChild(img);
+				return div;
+			}
+			return createImg(srcs[parseInt(Math.floor(Math.random()*srcs.length))]);
+		}
+		for(var i =0;i<lis.length;i++){
+			var min = Number.MAX_VALUE;
+			var minLi,t=0;
+			var img = getRandomImg(function(){				
+				this.classList.add('animate');
+				this.style.display='';
+				if(min>this.parentElement.parentElement.clientHeight){
+					min = this.parentElement.parentElement.clientHeight;
+					minLi = this.parentElement.parentElement;
+				}
+				if(++t==lis.length)
+					minLi.appendChild(getRandomImg(function(){this.classList.add('animate');this.style.display='';}));
+			});
+			lis[i].appendChild(img);
+		}
+	}
+	
+	document.onmousewheel=function(e){
+		var delta = e.wheelDelta || e.detail;
+		console.log(e);
+		var body = document.body;
+		if(delta<0 && Math.abs(body.scrollTop+body.clientHeight-body.scrollHeight)<=10){
+			imgwf.waterfall(['images/pic-1.jpg','images/pic-2.jpg','images/pic-3.jpg','images/pic-4.jpg']);
+		}
+	}
+</script>

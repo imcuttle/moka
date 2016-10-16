@@ -1,0 +1,14 @@
+{
+    "theme": "moka",
+    "title": "Moyu Blog",
+    "favicon": "favicon.ico",
+    "author": "moyu",
+    "description": "moyu Blog",
+    "siteName": "site",
+
+    "deploy": {
+        "type": "git",
+        "url": "https://github.com/moyuyc/moyuyc.github.io.git",
+        "branch": "master"
+    }
+}
