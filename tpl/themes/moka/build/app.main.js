@@ -11358,8 +11358,11 @@
 						u = (0, p["default"])({
 							"inner-post-page": a
 						});
+					var id = "/" !== e && "posts";
+					id = /^\/project\/?$/.test(e) ? window._moka_PrevID: id;
+					window._moka_PrevID = id;
 					return f["default"].createElement("div", {
-						id: "/" !== e && "posts",
+						id: id,
 						className: u
 					}, !!n && f["default"].createElement(b["default"], {
 							widthP: o,
@@ -11441,6 +11444,9 @@
 			return a(e, t), s(e, [{
 				key: "shouldComponentUpdate",
 				value: function(t, e, n) {
+					if(n.location.pathname === '/project') {
+						return false;
+					}
 					return !(0, l.Map)(this.context.params).equals((0, l.Map)(n.params)) || this.context.location.pathname !== n.location.pathname || !(0, l.Map)(this.props).equals((0, l.Map)(t))
 				}
 			}, {
@@ -11608,6 +11614,7 @@
 							width: this.props.widthP && this.props.widthP + "%",
 							display: 0 === this.props.widthP && "none"
 						});
+					// var ig = n==='/' || n==='/project';
 					return c["default"].createElement("div", {
 						ref: "left",
 						className: "block-left",
