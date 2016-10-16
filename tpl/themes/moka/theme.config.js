@@ -4,7 +4,7 @@
 // var highlight = require('pygmentize-bundled');
 
 module.exports = {
-    apiRoot: "_api",
+    apiRoot: "moka_api",
     skipRegExp: "/[^\.(md|markdown)]$/",
     //http://momentjs.com/
     timeFormat: 'YYYY-MM-DD HH:mm',
