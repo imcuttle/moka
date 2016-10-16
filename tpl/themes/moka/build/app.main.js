@@ -11837,6 +11837,11 @@
 					}), i && c["default"].createElement("span", {
 							className: "posts-link"
 						}, "POSTS"), c["default"].createElement(l.Link, {
+						onClick: function(e){
+							if(r==='/project') {
+								this.setState({prevView: this.context.location.pathname})
+							}
+						}.bind(this),
 						to: r,
 						title: "Project",
 						className: "projects-menu-icon " + o
