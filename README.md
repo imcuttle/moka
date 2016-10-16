@@ -34,7 +34,7 @@
 
 主题开发者请看 [Document](DOCUMENT.md)
 
-使用默认主题者请看或看配置说明
+默认主题说明请看 [Theme Config](THEME_README.md)
 
  
 
