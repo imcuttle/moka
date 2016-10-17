@@ -75,6 +75,18 @@
     },
     
     "articleCover": true   // 是否开启文章封面, 在文章头部配置 `cover: ...` 效果请看默认文章`Linux C学习一周`
+  },
+  // 音乐播放器 配置
+  // http://www.hocc.cn/wordpress-development-netease-cloud-music-player-code-single-player-playlists.html
+  "music": {
+    "id": "69355290",
+    "auto": false,
+    "style": {
+      "left": "80px",
+      "top": "15px",
+      "right": "",
+      "bottom": ""
+    }
   }
 }
 ```

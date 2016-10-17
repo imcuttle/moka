@@ -12366,6 +12366,7 @@
 				return u.themeConfig = t, t
 			})
 		};
+	window.__moka_c = u;
 	u.isCached = function() {
 		return !!u.mokaConfig && !!u.themeConfig && !!u.DB
 	}, e["default"] = {

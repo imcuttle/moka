@@ -24,7 +24,8 @@
     $ moka s  # 开启本地服务
     $ moka n abc # 新建一个article
     
-    $ moka d  # 根据 moka.config.json deploy 发布 
+    $ moka d  # 根据 moka.config.json deploy 发布
+    $ moka b  # 根据 moka.config.json bak 备份所有文件
     ``` 
 
 3. 线上效果

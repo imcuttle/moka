@@ -4,10 +4,69 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Title</title>
+    <title>Moyu Blog</title>
+    <meta name="description" content="moyu Blog">
+    <meta property="og:type" content="blog">
+    <meta property="og:site_name" content="site">
+    <script src="moka.inject.js?v=1.0.10"></script>
+    <link rel="icon" href="/head.jpg?v=1476676248393">
+    <style>
+        #musicBox {
+            display: none;
+            position: absolute;
+            left: 80px;
+            top: 15px;
+            z-index: 1;
+            /*transform: translateX(-100%);*/
+        }
+    </style>
 </head>
 <body>
 <div id="app"></div>
+<iframe id="musicBox" frameborder="no" border="0" marginwidth="0" marginheight="0" width="230" height="52"></iframe>
 <script src="app.main.js?v=0.0.1"></script>
+<script>
+    // 源码丢失, 新功能 音乐配置 dev
+    (function (doc, win, musicBox) {
+        doc.addEventListener('DOMContentLoaded',function () {
+            function work(cache) {
+                var db = cache.DB,
+                        tc = cache.themeConfig,
+                        mc = cache.mokaConfig;
+
+                var music = tc.music;
+                if(music) {
+                    var id = music.id,
+                            auto = !!music.auto?1:0,
+                            type = music.type || 0,
+                            style= music.style;
+
+
+                    musicBox.src = "http://music.163.com/outchain/player?type=0&"
+                            +"id="+id+"&auto="+auto+"&height=32";
+
+                    for(var k in style) {
+                        musicBox.style[k] = style[k];
+                    }
+                    musicBox.style.display = 'block';
+                }
+
+            }
+
+            var t;
+            if(!window.__moka_c || !window.__moka_c.isCached()) {
+                t = setInterval(function () {
+                    if(!!window.__moka_c && window.__moka_c.isCached()) {
+                        clearInterval(t);
+                        work(window.__moka_c);
+                    }
+                }, 20);
+            } else {
+                work(window.__moka_c)
+            }
+
+        })
+    })(document, window, document.getElementById('musicBox'))
+</script>
 </body>
 </html>
