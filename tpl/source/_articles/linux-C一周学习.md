@@ -3,7 +3,7 @@ title: linux C一周学习
 date: 2016-10-12 12:57:36
 categories:
 tags: [linux, c]
-cover: /head.jpg
+cover: http://ww2.sinaimg.cn/mw690/b2b1bff9jw1f8tf00mm95j20sg0izah4.jpg
 ---
 
 <!-- # linux C一周学习 & node c addon -->

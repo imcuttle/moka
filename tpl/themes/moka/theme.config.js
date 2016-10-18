@@ -7,7 +7,7 @@ module.exports = {
     apiRoot: "moka_api",
     skipRegExp: "/[^\.(md|markdown)]$/",
     //http://momentjs.com/
-    timeFormat: 'YYYY-MM-DD HH:mm',
+    timeFormat: 'DD MMM YYYY',
 
     marked: {
         options: {
