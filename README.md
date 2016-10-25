@@ -22,9 +22,11 @@
     $ moka i  # 开启自己的spa Blog
     $ moka g  # generate static pages
     $ moka s  # 开启本地服务，动态更新_articles
+    $ moka ss  # 开启本地静态服务，需要先generate
     $ moka n abc # 新建一个article
     
-    $ moka d  # 根据 moka.config.json deploy 发布 
+    $ moka d  # 根据 moka.config.json deploy 发布
+    $ moka b  # 根据 moka.config.json bak 发布
     ``` 
 
 3. 线上效果
