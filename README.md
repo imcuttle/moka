@@ -1,7 +1,9 @@
 # Moka (SPA Blog For Everyone)
 
+[English Quick Starter Here](https://moyuyc.github.io/#/article/Set-Up-Yourself-Blog)
+
 如今,单页应用"横行霸道", 而且新时代知识信息海量,我们更需要自己的Blog来沉淀知识。
-综上,`Moka`走入了我们的实现。
+综上,`Moka`走入了我们的视线。
 
 
 ## Usage
