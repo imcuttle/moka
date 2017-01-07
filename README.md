@@ -50,8 +50,15 @@
     │   └── ...   
     ├── template/
     │   └── article.md   # moka n 命令产生新文章的模板
+    ├── hooks/           # 钩子, 注意各个钩子的cwd还是`moka-blog`, 如果pre钩子exit code!=0，将会终止process
+    │   ├── pre-generate.sample
+    │   ├── post-generate.sample
+    │   ├── pre-bak.sample
+    │   ├── post-bak.sample
+    │   ├── pre-deploy.sample   # deploy之前调用，必须executable，去除`.sample`后缀
+    │   └── post-deploy.sample  # deploy之后调用
     └── themes/          # moka g 将配置中选中对应的主题 `themeBuild`目录 拷贝到static
-         └── moka/        # 主题文件夹，其中包含theme.config.json, 根据主题要求自行配置
+         └── moka/       # 主题文件夹，其中包含theme.config.json, 根据主题要求自行配置
 
     ```    
 
@@ -61,5 +68,7 @@
 
 默认主题说明请看 [Theme Config](THEME_README.md)
 
- 
+## Upgrade
+
+添加hooks, 支持用户自定义脚本。比如pre-generate/post-generate/post-deploy的发送邮件等
 

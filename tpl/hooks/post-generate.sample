@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+var path = require('path');
+var fs = require('fs');
+
+
+var apiRoot = require(path.resolve('./moka.config.json')).apiRoot || 'moka_api';
+var dbPath = path.resolve('.', 'static', apiRoot, 'db.json');
+var oldPath = path.resolve('./hooks/tmp_pre_generate.json')
+
+if(fs.existsSync(dbPath) && fs.existsSync(oldPath)) {
+    var db = require(dbPath);
+    var old = require(oldPath);
+    fs.unlinkSync(oldPath);
+
+    var newSorted = db.index.sorted;
+    var dbMain = db.main;
+
+    var oldMap = old.reduce((p, n) => {
+        p[n] = true;
+        return p;
+    }, {})
+    var newMap = newSorted.reduce((p, n) => {
+        p[n] = true;
+        return p;
+    }, {})
+
+
+    var data = newSorted.concat(old).reduce((p, x) => {
+        if(!oldMap[x] && !p.admap[x]) {
+            p.admap[x] = true;
+            p.add.push(x);
+        }
+        if(!newMap[x] && !p.rmmap[x]) {
+            p.rmmap[x] = true;
+            p.rm.push(x);
+        }
+        return p;
+    }, {rm: [], add: [], rmmap: {}, admap: {}})
+
+    data.add && data.add.length>0 && fs.writeFileSync('./hooks/tmp_post_generate.json', JSON.stringify(data.add));
+}
