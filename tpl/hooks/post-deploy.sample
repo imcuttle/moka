@@ -11,12 +11,9 @@ var addPath = path.resolve('./hooks/tmp_post_generate.json');
 var tmpPostDeployPath = path.resolve('./hooks/tmp_post_deploy.json');
 
 var receivers = [{
-    name: "王同学",
+    name: "Yu同学",
     mail: "492899414@qq.com"
-}, {
-   name: "王同学2",
-   mail: "492899414@qq.com"
-} ]
+}]
 
 var net = require('net');
 function sendMail(host,user,pwd,to,msg) {
@@ -29,7 +26,6 @@ function sendMail(host,user,pwd,to,msg) {
         });
         var wt = net.Socket.prototype.write;
         socket.write = function () {
-            // console.log(arguments);
             return wt.apply(this,arguments);
         }
 
@@ -44,44 +40,48 @@ function sendMail(host,user,pwd,to,msg) {
         socket.pipe(process.stdout);
         socket.on('data',function (data) {
             data = data.toString();
-            const code = data.match(/^\d{3}/)[0]
-            switch (code){
-                case '250':{
-                    var v = op.shift();
-                    if(v==='AUTH LOGIN\r\n'){
-                        op.push(user64+'\r\n');
-                        op.push(pwd+'\r\n');
-                    }else if(v==='RCPT TO:'+to+'\r\n'){
-                        op.push('DATA\r\n');
-                        op.push(msg+'\r\n.\r\n');
+            data.split('\r\n').forEach(data=>{
+                var m = data.match(/^\d{3}/)
+                if(!m) return;
+                var code = m[0]
+                switch (code){
+                    case '250':{
+                        var v = op.shift();
+                        if(v==='AUTH LOGIN\r\n'){
+                            op.push(user64+'\r\n');
+                            op.push(pwd+'\r\n');
+                        }else if(v==='RCPT TO:'+to+'\r\n'){
+                            op.push('DATA\r\n');
+                            op.push(msg+'\r\n.\r\n');
+                        }
+                        socket.write(v);
+                        break;
                     }
-                    socket.write(v);
-                    break;
+                    case '334':{
+                        var v = op.shift();
+                        socket.write(v);
+                        if(op.length===0) op.push('MAIL FROM:'+user+'\r\n');
+                        break;
+                    }
+                    case '235': socket.write(op.shift()); op.push('RCPT TO:'+to+'\r\n'); break;
+                    case '221': socket.end(); break;
+                    case '354': socket.write(op.shift()); op.push('QUIT'+'\r\n'); break;
+                    // default : console.log(data);
                 }
-                case '334':{
-                    var v = op.shift();
-                    socket.write(v);
-                    if(op.length===0) op.push('MAIL FROM:'+user+'\r\n');
-                    break;
-                }
-                case '235': socket.write(op.shift()); op.push('RCPT TO:'+to+'\r\n'); break;
-                case '221': socket.end(); break;
-                case '354': socket.write(op.shift()); op.push('QUIT'+'\r\n'); break;
-                // default : console.log(data);
-            }
+            });
         })
     })
 
 }
 
-function sync(proms) {
-    if(proms.length==0) {
+function sync(callables) {
+    if(callables.length==0) {
         return Promise.resolve();
     }
-    return proms.shift()
-    .then(function(x) {
-        return sync(proms);
-    })
+    return callables.shift().call()
+        .then(function(x) {
+            return sync(callables);
+        })
 }
 
 if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
@@ -109,40 +109,43 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
         var data = dbMain[add];
         if(new Date(data.head.realDate) > oldLastDate) {
             console.log('Sending Mail', data.head.title);
-            sync(receivers.map(r =>
-                sendMail(
-                    'smtp.qq.com',
-                    '492899414@qq.com',
-                    'jrpzcdbebynzcabf',
-                    'moyuyc95@gmail.com',
-                    "From: Moyu<moyuyc95@gmail.com>\r\n"+
-                    `Subject: [墨鱼新的文章出炉啦!] ${data.head.title} \r\n`+
-                    `To: ${r.name}<${r.mail}>\r\n`+
-                    "Content-Type: text/html\r\n\r\n"+
-                    `${render(compiled, Object.assign(data, {hrefTitle: add, _link: 'https://moyuyc.github.io'}))}`
-                ).then((err)=>{
-                    console.log('To', r.name, r.mail);
-                    if(err) {
-                        console.error(err);
-                    } else {
-                        if(!writed) {
-                            fs.unlinkSync(addPath);
-                            fs.writeFileSync('./hooks/tmp_post_deploy.json', JSON.stringify(
-                                { lastDate: dbMain[adds[0]].head.realDate, hrefTitle: adds[0] }
-                            ));
-                            writed = true;
+            sync(receivers.map(r => {
+                return function () {
+                    console.log('Sending', r.name, r.mail);
+                    return sendMail(
+                        'smtp.qq.com',
+                        '492899414@qq.com',
+                        'jrpzcdbebynzcabf',
+                        r.mail,
+                        "From: Moyu<492899414@qq.com>\r\n" +
+                        `Subject: [墨鱼新的文章出炉啦!] ${data.head.title} \r\n` +
+                        `To: ${r.name}<${r.mail}>\r\n` +
+                        "Content-Type: text/html\r\n\r\n" +
+                        `${render(compiled, Object.assign(data, {hrefTitle: add, _link: 'https://moyuyc.github.io'}))}`
+                    ).then((err) => {
+                        console.log('Sended', r.name, r.mail);
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            if (!writed) {
+                                fs.unlinkSync(addPath);
+                                fs.writeFileSync('./hooks/tmp_post_deploy.json', JSON.stringify(
+                                    {lastDate: dbMain[adds[0]].head.realDate, hrefTitle: adds[0]}
+                                ));
+                                writed = true;
+                            }
                         }
-                    }
-                })
-            )).catch(console.error)
+                    })
+                }
+            }))
         }
     })
 }
 
 function compile (str) {
     var tpl = str;
-        //.replace(/<%=([\s\S]+?)%>/g, (m, c) => "` + obj." + c + "+ `")
-        //.replace(/<%([\s\S]+?)%>/g, (m ,c) => "`;\n" + c + "\ntpl += `")
+    //.replace(/<%=([\s\S]+?)%>/g, (m, c) => "` + obj." + c + "+ `")
+    //.replace(/<%([\s\S]+?)%>/g, (m ,c) => "`;\n" + c + "\ntpl += `")
 
     // tpl = tpl.replace(/\'\n/g, '\'').replace(/\n\'/gm, '\'')
 
@@ -155,4 +158,5 @@ function render (compiled, data) {
     //console.log(compiled(data));
     return compiled(data);
 }
+
 
