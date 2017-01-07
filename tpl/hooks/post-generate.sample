@@ -2,12 +2,14 @@
 var path = require('path');
 var fs = require('fs');
 
+console.log('post-generate hook');
 
 var apiRoot = require(path.resolve('./moka.config.json')).apiRoot || 'moka_api';
 var dbPath = path.resolve('.', 'static', apiRoot, 'db.json');
 var oldPath = path.resolve('./hooks/tmp_pre_generate.json')
+var oldPath2 = path.resolve('./hooks/tmp_post_generate.json')
 
-if(fs.existsSync(dbPath) && fs.existsSync(oldPath)) {
+if(fs.existsSync(dbPath) && fs.existsSync(oldPath) && !fs.existsSync(oldPath2)) {
     var db = require(dbPath);
     var old = require(oldPath);
     fs.unlinkSync(oldPath);

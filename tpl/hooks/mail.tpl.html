@@ -13,21 +13,21 @@
 
 <div class="container">
     <div>
-        <h1 class="title"><a href="${obj._link+"/#posts/"+obj.hrefTitle}" target="_blank">${obj.head.title}</a></h1>
+        <h1 class="title"><a href="${obj._link+"/#article/"+obj.hrefTitle}" target="_blank">${obj.head.title}</a></h1>
         <time class="date">${obj.head.realDate}</time>
-        <span class="tags">${ (obj.head.tags || []).map(x=>`<a href="${obj._link+"/#tags/"+x} target="_blank">${x}</a>`) }</span>
+        <span class="tags">${ (obj.head.tags || []).map(x=>`<a href="${obj._link+"/#tags/"+x}" target="_blank">${x}</a>`) }</span>
     </div>
     <div class="markdown-body">
         ${obj.content.replace(/(<img.+?src=")([\s\S]+?)"/g, (m, a, b)=>{
-            if(!/^(http:)|(https:)|(\/\/)/.test(b)) {
-                return a+obj._link+b+"\"";
-            }
-            return a+b+"\"";
+        if(!/^(http:)|(https:)|(\/\/)/.test(b)) {
+        return a+obj._link+b+"\"";
+        }
+        return a+b+"\"";
         }).replace(/(<a.+?href=")([\s\S]+?)"/g, (m, a, b)=>{
-            if(!/^(http:)|(https:)|(\/\/)/.test(b)) {
-                return a+obj._link+b+"\"";
-            }
-            return a+b+"\"";
+        if(!/^(http:)|(https:)|(\/\/)/.test(b)) {
+        return a+obj._link+b+"\"";
+        }
+        return a+b+"\"";
         }) }
         <hr/>
         <br>

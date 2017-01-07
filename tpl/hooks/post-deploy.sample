@@ -2,6 +2,9 @@
 var path = require('path');
 var fs = require('fs');
 
+
+console.log('post-deploy hook');
+
 var apiRoot = require(path.resolve('./moka.config.json')).apiRoot || 'moka_api';
 var dbPath = path.resolve('.', 'static', apiRoot, 'db.json');
 var addPath = path.resolve('./hooks/tmp_post_generate.json');
@@ -16,54 +19,68 @@ var receivers = [{
 } ]
 
 var net = require('net');
-function sendMail(host,user,pwd,to,msg, cb) {
-    var socket = net.createConnection(25,host);
-    var user64 = new Buffer(user).toString("base64");
-    pwd  = new Buffer(pwd ).toString("base64");
-    socket.on('connect',function () {
-        this.write('HELO '+user+'\r\n');
-    });
-    var wt = net.Socket.prototype.write;
-    socket.write = function () {
-        // console.log(arguments);
-        return wt.apply(this,arguments);
-    }
-
-    var op = ['AUTH LOGIN\r\n'];
-    socket.on('close', () => {
-        cb();
-    })
-    socket.on('error', (err) => {
-        cb(err);
-    })
-    // socket.pipe(process.stdout);
-    socket.on('data',function (data) {
-        data = data.toString();
-        const code = data.match(/^\d{3}/)[0]
-        switch (code){
-            case '250':{
-                var v = op.shift();
-                if(v==='AUTH LOGIN\r\n'){
-                    op.push(user64+'\r\n');
-                    op.push(pwd+'\r\n');
-                }else if(v==='RCPT TO:'+to+'\r\n'){
-                    op.push('DATA\r\n');
-                    op.push(msg+'\r\n.\r\n');
-                }
-                socket.write(v);
-                break;
-            }
-            case '334':{
-                var v = op.shift();
-                socket.write(v);
-                if(op.length===0) op.push('MAIL FROM:'+user+'\r\n');
-                break;
-            }
-            case '235': socket.write(op.shift()); op.push('RCPT TO:'+to+'\r\n'); break;
-            case '221': socket.end(); break;
-            case '354': socket.write(op.shift()); op.push('QUIT'+'\r\n'); break;
-            // default : console.log(data);
+function sendMail(host,user,pwd,to,msg) {
+    return new Promise(resolve => {
+        var socket = net.createConnection(25,host);
+        var user64 = new Buffer(user).toString("base64");
+        pwd  = new Buffer(pwd ).toString("base64");
+        socket.on('connect',function () {
+            this.write('HELO '+user+'\r\n');
+        });
+        var wt = net.Socket.prototype.write;
+        socket.write = function () {
+            // console.log(arguments);
+            return wt.apply(this,arguments);
         }
+
+        var op = ['AUTH LOGIN\r\n'];
+        socket.on('close', (had_error) => {
+            !had_error && resolve();
+        })
+        socket.on('error', (err) => {
+            resolve(err);
+        })
+
+        socket.pipe(process.stdout);
+        socket.on('data',function (data) {
+            data = data.toString();
+            const code = data.match(/^\d{3}/)[0]
+            switch (code){
+                case '250':{
+                    var v = op.shift();
+                    if(v==='AUTH LOGIN\r\n'){
+                        op.push(user64+'\r\n');
+                        op.push(pwd+'\r\n');
+                    }else if(v==='RCPT TO:'+to+'\r\n'){
+                        op.push('DATA\r\n');
+                        op.push(msg+'\r\n.\r\n');
+                    }
+                    socket.write(v);
+                    break;
+                }
+                case '334':{
+                    var v = op.shift();
+                    socket.write(v);
+                    if(op.length===0) op.push('MAIL FROM:'+user+'\r\n');
+                    break;
+                }
+                case '235': socket.write(op.shift()); op.push('RCPT TO:'+to+'\r\n'); break;
+                case '221': socket.end(); break;
+                case '354': socket.write(op.shift()); op.push('QUIT'+'\r\n'); break;
+                // default : console.log(data);
+            }
+        })
+    })
+
+}
+
+function sync(proms) {
+    if(proms.length==0) {
+        return Promise.resolve();
+    }
+    return proms.shift()
+    .then(function(x) {
+        return sync(proms);
     })
 }
 
@@ -92,7 +109,7 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
         var data = dbMain[add];
         if(new Date(data.head.realDate) > oldLastDate) {
             console.log('Sending Mail', data.head.title);
-            receivers.forEach(r =>
+            sync(receivers.map(r =>
                 sendMail(
                     'smtp.qq.com',
                     '492899414@qq.com',
@@ -102,23 +119,22 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
                     `Subject: [墨鱼新的文章出炉啦!] ${data.head.title} \r\n`+
                     `To: ${r.name}<${r.mail}>\r\n`+
                     "Content-Type: text/html\r\n\r\n"+
-                    `${render(compiled, Object.assign(data, {hrefTitle: add, _link: 'https://moyuyc.github.io'}))}`,
-                    (err) => {
-                        console.log('To', r.name, r.mail);
-                        if(err) {
-                            console.error(err);
-                        } else {
-                            if(!writed) {
-                                fs.unlinkSync(addPath);
-                                fs.writeFileSync('./hooks/tmp_post_deploy.json', JSON.stringify(
-                                    { lastDate: dbMain[adds[0]].head.realDate, hrefTitle: adds[0] }
-                                ));
-                                writed = true;
-                            }
+                    `${render(compiled, Object.assign(data, {hrefTitle: add, _link: 'https://moyuyc.github.io'}))}`
+                ).then((err)=>{
+                    console.log('To', r.name, r.mail);
+                    if(err) {
+                        console.error(err);
+                    } else {
+                        if(!writed) {
+                            fs.unlinkSync(addPath);
+                            fs.writeFileSync('./hooks/tmp_post_deploy.json', JSON.stringify(
+                                { lastDate: dbMain[adds[0]].head.realDate, hrefTitle: adds[0] }
+                            ));
+                            writed = true;
                         }
                     }
-                )
-            )
+                })
+            )).catch(console.error)
         }
     })
 }
