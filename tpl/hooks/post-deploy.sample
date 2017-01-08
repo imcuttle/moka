@@ -71,7 +71,11 @@ function sendMail(host,user,pwd,to,msg) {
             });
         })
     })
+}
 
+function mail_encode (key, val, encode="utf-8") {
+    //http://www.programgo.com/article/59022457430/
+    return `${key}: =?${encode}?B?${new Buffer(val).toString('base64')}?=`
 }
 
 function sync(callables) {
@@ -118,15 +122,16 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
             sync(receivers.map(r => {
                 return function () {
                     console.log('Sending', r.name, r.mail);
+
                     return sendMail(
                         'smtp.qq.com',
                         '492899414@qq.com',
                         'jrpzcdbebynzcabf',
                         r.mail,
-                        "From: Moyu<492899414@qq.com>\r\n" +
-                        `Subject: [墨鱼新的文章出炉啦!] ${data.head.title} \r\n` +
-                        `To: ${r.name}<${r.mail}>\r\n` +
-                        "Content-Type: text/html\r\n\r\n" +
+                        `${mail_encode("From", "Moyu")} <moyuyc95@gmail.com>\r\n` +
+                        `${mail_encode("Subject", `[墨鱼新的文章出炉啦!] ${data.head.title}`)}\r\n` +
+                        `${mail_encode("To", r.name)} <${r.mail}>\r\n` +
+                        `Content-Type: text/html; charset="utf-8"\r\n\r\n` +
                         `${render(compiled, Object.assign(data, {hrefTitle: add, _link: 'https://moyuyc.github.io'}))}`
                     ).then((err) => {
                         console.log('Sended', r.name, r.mail);
@@ -164,5 +169,3 @@ function render (compiled, data) {
     //console.log(compiled(data));
     return compiled(data);
 }
-
-
