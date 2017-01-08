@@ -107,6 +107,7 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
 
     adds.forEach(add => {
         var data = dbMain[add];
+        if(!data) return;
         if(new Date(data.head.realDate) > oldLastDate) {
             console.log('Sending Mail', data.head.title);
             sync(receivers.map(r => {

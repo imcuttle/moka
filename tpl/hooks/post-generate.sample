@@ -9,7 +9,7 @@ var dbPath = path.resolve('.', 'static', apiRoot, 'db.json');
 var oldPath = path.resolve('./hooks/tmp_pre_generate.json')
 var oldPath2 = path.resolve('./hooks/tmp_post_generate.json')
 
-if(fs.existsSync(dbPath) && fs.existsSync(oldPath) && !fs.existsSync(oldPath2)) {
+if(fs.existsSync(dbPath) && fs.existsSync(oldPath)) {
     var db = require(dbPath);
     var old = require(oldPath);
     fs.unlinkSync(oldPath);
@@ -39,5 +39,13 @@ if(fs.existsSync(dbPath) && fs.existsSync(oldPath) && !fs.existsSync(oldPath2)) 
         return p;
     }, {rm: [], add: [], rmmap: {}, admap: {}})
 
-    data.add && data.add.length>0 && fs.writeFileSync('./hooks/tmp_post_generate.json', JSON.stringify(data.add));
+    if(data.add && data.add.length>0) {
+        var oldAdds = []
+        if(fs.existsSync(oldPath2)) {
+            oldAdds = require(oldPath2);
+        }
+        var outMap = oldAdds.filter(o=>newSorted.indexOf(o)>=0).concat(data.add).reduce((p, n) => { p[n] = true; return p;}, {});
+        var adds = Object.keys(outMap).sort((a, b) => new Date(dbMain[b].head.realDate)-new Date(dbMain[a].head.realDate))
+        fs.writeFileSync('./hooks/tmp_post_generate.json', JSON.stringify(adds));
+    }
 }
