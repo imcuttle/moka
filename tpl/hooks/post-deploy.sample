@@ -92,6 +92,11 @@ if(fs.existsSync(dbPath) && fs.existsSync(addPath)) {
 
     var sorted = db.index.sorted;
     var dbMain = db.main;
+    adds = adds.filter(x=>!!dbMain[x]);
+    if(adds.length==0) {
+        fs.unlinkSync(addPath);
+        return;
+    }
 
     var lastDate = new Date(dbMain[adds[0]].head.realDate);
     var oldLastDate = new Date(file_data.lastDate);
