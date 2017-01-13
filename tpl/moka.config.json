@@ -6,11 +6,17 @@
     "description": "moyu Blog",
     "siteName": "site",
 
-    "deploy": {
+    "deploy": [{
         "type": "git",
+        "name": "origin",
         "url": "https://github.com/moyuyc/moyuyc.github.io.git",
         "branch": "master"
-    },
+    }, {
+        "type": "git",
+        "name": "oschina",
+        "url": "https://git.oschina.net/moyuyc/moyuyc.git",
+        "branch": "master"
+    }],
     "bak": {
         "type": "git",
         "url": "https://github.com/moyuyc/blogsource.git",
